@@ -5,19 +5,19 @@ import { useState } from 'react'
 const denverData = {
   city: "Denver",
   attractions: [
-    "Red Rocks Amphitheatre",
-    "Denver Art Museum",
-    "Union Station",
-    "Denver Botanic Gardens"
+    { name: "Red Rocks Amphitheatre", link: "https://www.redrocksonline.com/", image: "https://upload.wikimedia.org/wikipedia/commons/7/7f/Red_Rocks_Amphitheatre_2022.jpg" },
+    { name: "Denver Art Museum", link: "https://denverartmuseum.org/", image: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Denver_Art_Museum_Exterior_2011.jpg" },
+    { name: "Union Station", link: "https://unionstationindenver.com/", image: "https://upload.wikimedia.org/wikipedia/commons/7/70/Denver_Union_Station%2C_August_2014.jpg" },
+    { name: "Denver Botanic Gardens", link: "https://www.botanicgardens.org/", image: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Denver_Botanic_Gardens.JPG" }
   ],
   avoid: [
     "Some areas in Five Points at night",
     "Colfax Avenue east of downtown"
   ],
   hotels: [
-    "The Crawford Hotel",
-    "Grand Hyatt Denver",
-    "The Jacquard, Autograph Collection"
+    { name: "The Crawford Hotel", link: "https://www.thecrawfordhotel.com/", image: "https://upload.wikimedia.org/wikipedia/commons/f/f4/Crawford_Hotel_Denver.jpg" },
+    { name: "Grand Hyatt Denver", link: "https://www.hyatt.com/en-US/hotel/colorado/grand-hyatt-denver/denrd", image: "https://media-cdn.tripadvisor.com/media/photo-s/17/01/d1/56/exterior.jpg" },
+    { name: "The Jacquard, Autograph Collection", link: "https://www.marriott.com/en-us/hotels/denaj-the-jacquard-autograph-collection/overview/", image: "https://cache.marriott.com/marriottassets/marriott/DENAJ/denaj-exterior-1175-hor-clsc.jpg" }
   ],
   coworking: [
     "Industrious Denver",
@@ -31,10 +31,21 @@ const denverData = {
   ]
 }
 
+const ImageCard = ({ name, link, image }) => (
+  <a href={link} target="_blank" rel="noopener noreferrer" className="block mb-4 hover:opacity-90">
+    <img src={image} alt={name} className="rounded-lg w-full h-48 object-cover mb-2 shadow" />
+    <h3 className="text-lg font-semibold text-blue-800">{name}</h3>
+  </a>
+)
+
 const Section = ({ title, content }) => (
-  <div className="mb-8">
-    <h2 className="text-2xl font-semibold text-blue-700 mb-3 border-b pb-1">{title}</h2>
-    {Array.isArray(content) ? (
+  <div className="mb-10">
+    <h2 className="text-2xl font-semibold text-blue-700 mb-4 border-b pb-1">{title}</h2>
+    {Array.isArray(content) && typeof content[0] === 'object' ? (
+      <div className="grid md:grid-cols-2 gap-6">
+        {content.map((item, i) => <ImageCard key={i} {...item} />)}
+      </div>
+    ) : Array.isArray(content) ? (
       <ul className="list-disc ml-6 space-y-1 text-gray-800">
         {content.map((item, i) => <li key={i}>{item}</li>)}
       </ul>
@@ -57,7 +68,7 @@ export default function Home() {
       <Head>
         <title>Denver City Guide</title>
       </Head>
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl p-10 border border-gray-200">
+      <div className="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl p-10 border border-gray-200">
         <h1 className="text-4xl font-bold text-center text-blue-800 mb-10">Denver City Guide</h1>
         <div className="flex mb-8">
           <input
@@ -76,7 +87,7 @@ export default function Home() {
         </div>
 
         {showInfo && (
-          <div className="text-lg space-y-8">
+          <div className="text-lg space-y-10">
             <Section title="Top Places to Visit" content={denverData.attractions} />
             <Section title="Places to Avoid" content={denverData.avoid} />
             <Section title="Hotels for Business Travelers" content={denverData.hotels} />
